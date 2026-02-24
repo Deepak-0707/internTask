@@ -40,5 +40,5 @@ jobs:
           key: ${{ secrets.VM_KEY }}
           script: |
             cd /home/ubuntu/internTask
-            docker-compose pull
-            docker-compose up -d
+            docker compose pull
+            docker compose up -d
