@@ -9,7 +9,7 @@ services:
       - mongo-data:/data/db
 
   backend:
-    build: ./backend
+    image: deepakm06/backend:latest
     container_name: backend
     restart: always
     ports:
@@ -20,7 +20,7 @@ services:
       - mongo
 
   frontend:
-    build: ./frontend
+    image: deepakm06/frontend:latest
     container_name: frontend
     restart: always
     ports:
