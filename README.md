@@ -1,30 +1,113 @@
-In this DevOps task, you need to build and deploy a full-stack CRUD application using the MEAN stack (MongoDB, Express, Angular 15, and Node.js). The backend will be developed with Node.js and Express to provide REST APIs, connecting to a MongoDB database. The frontend will be an Angular application utilizing HTTPClient for communication.  
+# MEAN Stack Application – DevOps Deployment
 
-The application will manage a collection of tutorials, where each tutorial includes an ID, title, description, and published status. Users will be able to create, retrieve, update, and delete tutorials. Additionally, a search box will allow users to find tutorials by title.
+## Project Overview
 
-## Project setup
-I am trigerring cicd
-### Node.js Server
+This project demonstrates containerization and cloud deployment of a full-stack MEAN (MongoDB, Express, Angular, Node.js) application using Docker, Docker Compose, GitHub Actions, Nginx, and AWS EC2.
 
-cd backend
+The application is fully automated with a CI/CD pipeline that builds, pushes, and deploys updated Docker images whenever code is pushed to the main branch.
 
-npm install
+---
 
-You can update the MongoDB credentials by modifying the `db.config.js` file located in `app/config/`.
+## Tech Stack
 
-Run `node server.js`
+- MongoDB
+- Express.js
+- Angular
+- Node.js
+- Docker
+- Docker Compose
+- GitHub Actions
+- Nginx
+- AWS EC2 (Ubuntu 22.04)
 
-### Angular Client
+---
 
-cd frontend
+## Architecture
 
-npm install
+```
+Client → Nginx (Port 80) → Backend (Node.js + Express) → MongoDB
+```
 
-Run `ng serve --port 8081`
+- All services run as Docker containers.
+- Only port 80 is exposed publicly.
+- Backend and MongoDB remain internal within the Docker network.
+- Nginx acts as a reverse proxy.
 
-You can modify the `src/app/services/tutorial.service.ts` file to adjust how the frontend interacts with the backend.
+---
 
-Navigate to `http://localhost:8081/`
+## Repository Structure
+
+```
+frontend/
+backend/
+docker-compose.yaml
+.github/workflows/ci-cd.yml
+README.md
+screenshots/
+```
+
+---
 
 
-I am modifing the readme for triggering the ci pipeline
+Application will be available at:
+
+```
+http://<VM_PUBLIC_IP>
+```
+
+---
+
+## CI/CD Pipeline
+
+CI/CD is implemented using GitHub Actions. On every push to the `main` branch:
+
+1. Docker images for frontend and backend are built.
+2. Images are pushed to Docker Hub.
+3. SSH connection is made to the EC2 instance.
+4. Latest images are pulled.
+5. Containers are restarted using Docker Compose.
+
+Pipeline configuration file:
+
+```
+.github/workflows/ci-cd.yml
+```
+
+---
+
+## Cloud Deployment
+
+- **Provider:** AWS EC2
+- **OS:** Ubuntu 22.04 LTS
+- **Runtime:** Docker Compose v2
+- **Network:** Security group allows inbound traffic on port 80
+
+Deployment commands executed on the server:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+---
+
+## Nginx Reverse Proxy
+
+- Application is accessible via port 80.
+- `/` routes to the Angular frontend.
+- `/api` routes to the backend service.
+- Backend is not exposed publicly.
+
+---
+
+## MongoDB
+
+- Official `mongo:6` Docker image used.
+---
+
+## Docker Hub Images
+
+| Service  | Image |
+|----------|-------|
+| Frontend | https://hub.docker.com/repository/docker/deepakm06/frontend/ |
+| Backend  | https://hub.docker.com/repository/docker/deepakm06/backend/ |
